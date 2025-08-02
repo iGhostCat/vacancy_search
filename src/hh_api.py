@@ -24,13 +24,19 @@ class HH_API(AbstractAPI):
         response = requests.get(self.__url, params = self.__params)
         return response
 
-    def get_vacancies(self, text, multi_page = 0):
+    def get_vacancies(self, text, multi_page=0):
         all_vacancies = []
-        while self.__params['page'] < multi_page:
-            vacancies = self.connect(text).json()['items']
+        for page in range(multi_page + 1):  # Если multi_page=0, выполнится 1 раз (page=0)
+            self.__params['page'] = page  # Устанавливаем текущую страницу
+            response = self.connect(text)
+            if response.status_code != 200:
+                break  # Прерываем, если запрос не удался
+            vacancies = response.json().get('items', [])
+            if not vacancies:
+                break  # Прерываем, если вакансий нет
             all_vacancies.extend(vacancies)
-            self.__params['page'] += 1
         return all_vacancies
+
 
 if __name__ == 'main':
     hh = HH_API()

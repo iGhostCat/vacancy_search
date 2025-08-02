@@ -31,3 +31,9 @@ class JSONSaver(AbsJSON):
                                      "description": vacancy["snippet"]["requirement"]})
         with open(self.__filepath, "w", encoding="utf-8") as file:
             json.dump(vacancies_filter, file)
+
+    def read_vacancies(self):
+        pass
+
+    def delete_vacancies(self):
+        pass
