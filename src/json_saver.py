@@ -1,4 +1,7 @@
 from abc import ABC, abstractmethod
+from typing import List
+
+from src.vacancy import Vacancy
 
 import json
 
@@ -47,8 +50,16 @@ class JSONSaver(AbsJSON):
         with open(self.__filepath, "w", encoding="utf-8") as file:
             json.dump(vacancies_filter, file, ensure_ascii=False, indent=4)
 
-    def read_vacancies(self):
-        pass
+    def read_vacancies(self) -> List[Vacancy]:
+        """Читает вакансии из JSON-файла и возвращает список объектов Vacancy."""
+        try:
+            with open(self.__filepath, "r", encoding="utf-8") as file:
+                vacancies_data = json.load(file)
+                return [Vacancy.from_dict(v) for v in vacancies_data]
+        except (FileNotFoundError, json.JSONDecodeError):
+            return []  # Если файла нет или он пуст → возвращаем пустой список
 
     def delete_vacancies(self):
-        pass
+        """Очищает файл с вакансиями."""
+        with open(self.__filepath, "w", encoding="utf-8") as file:
+            file.write("[]")  # Записываем пустой список
