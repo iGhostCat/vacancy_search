@@ -15,6 +15,7 @@ class AbstractAPI(ABC):
 
 
 class HH_API(AbstractAPI):
+    __slots__ = ['page', 'text', 'multi_page']
     def __init__(self, page = 0):
         self.__url = 'https://api.hh.ru/vacancies'
         self.__params = {'page' : page, 'per_page' : 15}
